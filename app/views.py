@@ -10,6 +10,9 @@ from app import app, db
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
+from bs4 import BeautifulSoup
+import urllib2, requests
+
 
 ###
 # Routing for your application.
@@ -20,12 +23,6 @@ def home():
     """Render website's home page."""
     return render_template('home.html')
 
-
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html')
-
 @app.route('/api/users/register', methods=['POST'])
 def register():
     if request.method == 'POST':
@@ -33,10 +30,8 @@ def register():
         user = User(data['email'], data['fname'], data['lname'], data['password'])
         db.session.add(user)
         db.session.commit()
-        flash('User created successfully')
-        return redirect(url_for('home'))
-    flash('Error creating user')
-    return url_for('home')
+        return jsonify({'status' : 'success', 'message' : 'User created successfully', 'user' : user.serialize})
+    return jsonify({'status' : 'error', 'message' : 'Error creating user'})
 
 @app.route('/api/users/login', methods=['POST'])
 def login():
@@ -57,24 +52,42 @@ def login():
 
 @app.route('/api/users/<int:userid>/wishlist', methods=['GET', 'POST'])
 def wishlist(userid):
+    user = User.query.get(userid)
+    if user == None:
+        return jsonify({'status' : 'error', 'message' : 'User does not exist.'})
     if request.method == 'POST':
         data = request.form
-        wishlistitem = WishlistItem(data['name'], userid, data['thumbnail'])
-        db.session.add(wishlistitem)
+        wishlistitem = WishlistItem(data['name'], data['thumbnail'])
+        user.wishlist.append(wishlistitem)
+        db.session.add(user)
         db.session.commit()
         return jsonify(status = 'success')
-    itemlist = User.query.get(userid).wishlist
+    itemlist = user.wishlist
+    print itemlist[0].user
     return jsonify(wishlist = [item.serialize for item in itemlist])
 
 @app.route('/api/thumbnails', methods=['GET'])
 def thumbnails():
-    """Render the website's about page."""
-    return render_template('thumbnails.html')
+    print urllib2.quote(request.args.get('url'))
+    soup = BeautifulSoup(requests.get(request.args.get('url')).text, "lxml")
+    return jsonify(thumbnails = [img.get('src') for img in soup.find_all('img')])
 
 @app.route('/api/users/<int:userid>/wishlist/<int:itemid>', methods=['DELETE'])
 def deleteitem(userid, itemid):
-    """Render the website's about page."""
-    return render_template('wishlist.html')
+    response = {'status' : 'error', 'message' : 'Unknown'}
+    user = User.query.get(userid)
+    if user == None:
+        response['message'] = 'User not found'
+        return jsonify(response)
+    else:
+        for item in user.wishlist:
+            if item.id == itemid:
+                user.wishlist.remove(item)
+                db.session.commit()
+                response = {'status' : 'success', 'message' : 'Item deleted successfully'}
+                return jsonify(response)
+    response['message'] = 'Item not found'
+    return jsonify(response)
 
 ###
 # The functions below should be applicable to all Flask apps.

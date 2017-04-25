@@ -16,3 +16,5 @@ gunicorn==19.6.0
 itsdangerous==0.24
 wsgiref==0.1.2
 beautifulsoup4
+requests
+lxml
