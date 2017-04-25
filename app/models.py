@@ -30,6 +30,7 @@ class User(db.Model):
         self.firstname = fname
         self.lastname = lname
         self.password = password
+        self.wishlist = []
 
     def __repr__(self):
         return '<User %r>' % (self.id)
@@ -54,12 +55,11 @@ class User(db.Model):
 class WishlistItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
-    thumbnail = db.Column(db.String(80))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    thumbnail = db.Column(db.String(255))
     
-    def __init__(self, name=None, user=None, thumbnail=None):
+    def __init__(self, name=None, thumbnail=None):
         self.name = name
-        self.user = user
         self.thumbnail = thumbnail
         
     def __repr__(self):
@@ -70,6 +70,6 @@ class WishlistItem(db.Model):
        return {
            'id'         : self.id,
            'name'       : self.name,
-           'user'       : self.user,
+           'user'       : self.user.id,
            'thumbnail'  : self.thumbnail
        }
