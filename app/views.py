@@ -7,12 +7,31 @@ This file creates your application.
 """
 
 from app import app, db
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify, make_response
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
 from bs4 import BeautifulSoup
 from werkzeug.utils import secure_filename
-import urllib2, requests, os
+from functools import wraps
+import urllib2, requests, os, hashlib
+
+def validate_user(username, password):
+    user = User.query.filter_by(email=username).first()
+    if user != None:
+        enpass = hashlib.md5(password.encode()).hexdigest()
+        return user.password == enpass
+    return False
+    
+def authenticate(func):
+    @wraps(func)
+    def decorated(*args, **kargs):
+        auth = request.authorization
+        if not auth or not validate_user(auth.username, auth.password):
+            response = make_response("", 401)
+            response.headers["WWW-Authenticate"] = 'Basic realm="Login Required"'
+            return response
+        return func(*args, **kargs)
+    return decorated
 
 ###
 # Routing for your application.
@@ -36,7 +55,8 @@ def register():
         else:
             name = 'default.jpg'
         data = request.form
-        user = User(data['email'], data['name'], data['password'], name, data['age'], data['gender'])
+        password = hashlib.md5(data['password'].encode()).hexdigest()
+        user = User(data['email'], data['name'], password, name, data['age'], data['gender'])
         db.session.add(user)
         db.session.commit()
         response["data"] = {"user" : user.serialize}
@@ -55,7 +75,7 @@ def login():
             response['error'] = 'true'
             response['message'] = 'User does not exist.'
             return jsonify(response)
-        elif user.password == data['password']:
+        elif user.password == hashlib.md5(data['password'].encode()).hexdigest():
             response['data'] = {'user' : user.serialize_many}
             return jsonify(response)
     response['error'] = 'true'
@@ -63,6 +83,7 @@ def login():
     return jsonify(response)
 
 @app.route('/api/users/<int:userid>/wishlist', methods=['GET', 'POST'])
+@authenticate
 def wishlist(userid):
     response = { "error": 'null', "data": {}, "message": "Success"}
     user = User.query.get(userid)
@@ -87,6 +108,7 @@ def wishlist(userid):
     return jsonify(response)
 
 @app.route('/api/thumbnails', methods=['GET'])
+@authenticate
 def thumbnails():
     print urllib2.quote(request.args.get('url'))
     soup = BeautifulSoup(requests.get(request.args.get('url')).text, "lxml")
@@ -94,6 +116,7 @@ def thumbnails():
     return jsonify(response)
 
 @app.route('/api/users/<int:userid>/wishlist/<int:itemid>', methods=['DELETE'])
+@authenticate
 def deleteitem(userid, itemid):
     response = { "error": 'null', "data": {}, "message": "Success"}
     user = User.query.get(userid)
