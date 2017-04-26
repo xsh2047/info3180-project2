@@ -11,12 +11,10 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
 from bs4 import BeautifulSoup
-<<<<<<< HEAD
+
 import urllib2,json
-=======
 from werkzeug.utils import secure_filename
 import urllib2, requests, os
->>>>>>> 2c6e9cd4a4612762083b4c0b3bd405a10e032495
 
 ###
 # Routing for your application.
@@ -31,11 +29,9 @@ def home():
 def register():
     response = { "error": 'null', "data": {}, "message": "Success"}
     if request.method == 'POST':
-<<<<<<< HEAD
         
         data = json.loads(request.data)
         user = User(data['email'], data['fname'], data['lname'], data['password'])
-=======
         file = request.files['picture']
         if file:
             file_folder = app.config['UPLOAD_FOLDER']
@@ -46,7 +42,6 @@ def register():
             name = 'default.jpg'
         data = request.form
         user = User(data['email'], data['name'], data['password'], name, data['age'], data['gender'])
->>>>>>> 2c6e9cd4a4612762083b4c0b3bd405a10e032495
         db.session.add(user)
         db.session.commit()
         response["data"] = {"user" : user.serialize}
@@ -81,7 +76,6 @@ def wishlist(userid):
         response['message'] = 'User does not exist.'
         return jsonify(response)
     if request.method == 'POST':
-<<<<<<< HEAD
         data = json.loads(request.data)
         wishlistitem = WishlistItem(data['name'], data['thumbnail'])
         # fix shit below
@@ -90,7 +84,6 @@ def wishlist(userid):
         db.session.commit()
         return jsonify(status = 'success')
 
-=======
         data = request.form
         wishlistitem = WishlistItem(data['name'], data['thumbnail'], data['url'], data['desc'])
         user.wishlist.append(wishlistitem)
@@ -98,7 +91,6 @@ def wishlist(userid):
         db.session.commit()
         response['data'] = {"item" : wishlistitem.serialize}
         return jsonify(response)
->>>>>>> 2c6e9cd4a4612762083b4c0b3bd405a10e032495
     itemlist = user.wishlist
     if len([i for i in itemlist]) < 1:
          response['error'] = 'true'
