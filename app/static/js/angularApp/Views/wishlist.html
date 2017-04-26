@@ -1,2 +1,12 @@
 <a href="/#/logout">Logout</a>
 this is your wishlist bitch
+
+<div class="container">
+	<div ng-repeat="item in wishlist">
+		<div class="col-md-4">
+			<h4>{{item.name}}</h4>
+			<img class="thumbnail" ng-src ="{{item.thumbnail}}"></img>
+		</div>
+	</div>
+	<button ng-click="addNew()">Add New Item</button>
+</div>

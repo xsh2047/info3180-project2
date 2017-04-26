@@ -23,6 +23,10 @@ app.config(['$routeProvider',function($routeProvider, $locationProvider){
 		controller:'WishlistController',
 		templateUrl:'/static/js/angularApp/Views/wishlist.html'
 	})
+	.when('/wishlist/new',{
+		controller: 'NewItemController',
+		templateUrl: '/static/js/angularApp/Views/new.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	})

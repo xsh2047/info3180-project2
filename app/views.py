@@ -56,19 +56,21 @@ def wishlist(userid):
     if user == None:
         return jsonify({'status' : 'error', 'message' : 'User does not exist.'})
     if request.method == 'POST':
-        data = request.form
+        data = json.loads(request.data)
         wishlistitem = WishlistItem(data['name'], data['thumbnail'])
-        user.wishlist.append(wishlistitem)
+        # fix shit below
+        user.wishlist.append(wishlistitem) 
         db.session.add(user)
         db.session.commit()
         return jsonify(status = 'success')
+
     itemlist = user.wishlist
     print itemlist[0].user
     return jsonify(wishlist = [item.serialize for item in itemlist])
 
 @app.route('/api/thumbnails', methods=['GET'])
 def thumbnails():
-    print urllib2.quote(request.args.get('url'))
+    print urllib2.quote(requests.args.get('url'))
     soup = BeautifulSoup(requests.get(request.args.get('url')).text, "lxml")
     return jsonify(thumbnails = [img.get('src') for img in soup.find_all('img')])
 
