@@ -3,9 +3,11 @@ import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(80))
-    lastname = db.Column(db.String(80))
+    name = db.Column(db.String(80))
+    image = db.Column(db.String(80))
     email = db.Column(db.String(80), unique = True)
+    gender = db.Column(db.String(10))
+    age = db.Column(db.Integer)
     password = db.Column(db.String(80))
     wishlist = db.relationship('WishlistItem', backref="user", cascade="all, delete-orphan" , lazy='dynamic')
     created = db.Column(db.DateTime, default=datetime.datetime.now())
@@ -25,11 +27,13 @@ class User(db.Model):
         except NameError:
             return str(self.id)  # python 3 support
 
-    def __init__(self, email=None, fname=None, lname=None, password=None):
+    def __init__(self, email=None, name=None, password=None, image=None, age=None, gender=None):
         self.email = email
-        self.firstname = fname
-        self.lastname = lname
+        self.name = name
         self.password = password
+        self.age = age
+        self.gender = gender
+        self.image = image
         self.wishlist = []
 
     def __repr__(self):
@@ -38,29 +42,35 @@ class User(db.Model):
     @property
     def serialize(self):
        return {
-           'id'         : self.id,
-           'username' : self.email,
-           'firstname': self.firstname,
-           'lastname' : self.lastname,
+           'id'                 : self.id,
+           'email'              : self.email,
+           'name'               : self.name,
+           'age'                : self.age,
+           'gender'             : self.gender,
+           'image'              : self.image,
            'profile_created_on' : self.created
        }
        
     @property
     def serialize_many(self):
        return {
-           'id'         : self.id,
-           'username' : self.email
+           'name'  : self.name,
+           'email' : self.email
        }
 
 class WishlistItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    description = db.Column(db.String(255))
+    url = db.Column(db.String(255))
     thumbnail = db.Column(db.String(255))
     
-    def __init__(self, name=None, thumbnail=None):
+    def __init__(self, name=None, thumbnail=None, url=None, description=None):
         self.name = name
         self.thumbnail = thumbnail
+        self.url = url
+        self.description = description
         
     def __repr__(self):
         return '<Item %r>' % (self.id)
@@ -68,8 +78,9 @@ class WishlistItem(db.Model):
     @property
     def serialize(self):
        return {
-           'id'         : self.id,
-           'name'       : self.name,
-           'user'       : self.user.id,
-           'thumbnail'  : self.thumbnail
+           'id'             : self.id,
+           'title'          : self.name,
+           'description'    : self.description,
+           'thumbnail_url'      : self.thumbnail,
+           'url'            : self.url
        }
