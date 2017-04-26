@@ -36,3 +36,9 @@ pip-log.txt
 
 #init file
 /app/__init__.py
+
+#migrations
+/migrations
+
+info3180-project2.pdf
+

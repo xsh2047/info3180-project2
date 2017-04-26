@@ -15,6 +15,14 @@ app.config(['$routeProvider',function($routeProvider, $locationProvider){
 		controller: 'LoginController',
 		templateUrl: '/static/js/angularApp/Views/login.html'
 	})
+	.when('/logout',{
+		controller:'LogoutController',
+		template: ""
+	})
+	.when('/wishlist',{
+		controller:'WishlistController',
+		templateUrl:'/static/js/angularApp/Views/wishlist.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	})

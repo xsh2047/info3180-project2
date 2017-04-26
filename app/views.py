@@ -11,8 +11,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
 from bs4 import BeautifulSoup
-import urllib2, requests
-
+import urllib2,json
 
 ###
 # Routing for your application.
@@ -26,7 +25,8 @@ def home():
 @app.route('/api/users/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        data = request.form
+        
+        data = json.loads(request.data)
         user = User(data['email'], data['fname'], data['lname'], data['password'])
         db.session.add(user)
         db.session.commit()
@@ -36,7 +36,7 @@ def register():
 @app.route('/api/users/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        data = request.form
+        data = json.loads(request.data)
         user = User.query.filter_by(email=data['email']).first()
         response = {'status' : 'error', 'message' : 'Unknown', 'user' : 'null'}
         if user == None:
