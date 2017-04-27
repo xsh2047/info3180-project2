@@ -11,6 +11,8 @@ from flask import render_template, request, redirect, url_for, flash, jsonify, m
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
 from bs4 import BeautifulSoup
+
+import urllib2,json
 from werkzeug.utils import secure_filename
 from functools import wraps
 import urllib2, requests, os, hashlib
@@ -46,6 +48,9 @@ def home():
 def register():
     response = { "error": 'null', "data": {}, "message": "Success"}
     if request.method == 'POST':
+        
+        data = json.loads(request.data)
+        user = User(data['email'], data['fname'], data['lname'], data['password'])
         file = request.files['picture']
         if file:
             file_folder = app.config['UPLOAD_FOLDER']
@@ -69,7 +74,7 @@ def register():
 def login():
     response = { "error": 'null', "data": {}, "message": "Success"}
     if request.method == 'POST':
-        data = request.form
+        data = json.loads(request.data)
         user = User.query.filter_by(email=data['email']).first()
         if user == None:
             response['error'] = 'true'
@@ -92,6 +97,14 @@ def wishlist(userid):
         response['message'] = 'User does not exist.'
         return jsonify(response)
     if request.method == 'POST':
+        data = json.loads(request.data)
+        wishlistitem = WishlistItem(data['name'], data['thumbnail'])
+        # fix shit below
+        user.wishlist.append(wishlistitem) 
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(status = 'success')
+
         data = request.form
         wishlistitem = WishlistItem(data['name'], data['thumbnail'], data['url'], data['desc'])
         user.wishlist.append(wishlistitem)
@@ -110,7 +123,7 @@ def wishlist(userid):
 @app.route('/api/thumbnails', methods=['GET'])
 @authenticate
 def thumbnails():
-    print urllib2.quote(request.args.get('url'))
+    print urllib2.quote(requests.args.get('url'))
     soup = BeautifulSoup(requests.get(request.args.get('url')).text, "lxml")
     response = { "error": 'null', "data": {"thumbnails": [img.get('src') for img in soup.find_all('img')]}, "message": "Success"}
     return jsonify(response)
