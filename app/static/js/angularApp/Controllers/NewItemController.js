@@ -4,14 +4,52 @@ app.controller('NewItemController', ['$scope','$http','$location',function($scop
 	}
 
 	$scope.url = ""
+	$scope.thumbList=[]
+
+	
 	$scope.addItem = function(){
 		config ={
 
-			headers:{'Accept': "json"}
+			headers:{
+				'Accept': "json",
+				"Authorization":"Basic "+localStorage.token
+			}
 		}
 		console.log("adding")
+
 		$http.get('/api/thumbnails?url='+$scope.url, config).then(function(response){
-			console.log(response.data)
+			$scope.thumbList = response.data.data.thumbnails
+			console.log($scope.thumbList)
 		})
+	}
+
+	$scope.select = function(v){
+		$scope.thumbnail = $scope.thumbList[v]
+		config = {
+
+			headers:{'Accept': "json",
+			"Authorization":"Basic " +localStorage.token
+
+			}
+		}
+
+		data = {
+			"name": $scope.name,
+			"thumbnail":$scope.thumbnail,
+			"url":$scope.url,
+			"desc":$scope.description
+		}
+
+	$http.post('/api/users/'+localStorage.userID+'/wishlist',data, config).then(function(response){
+		
+			if(response.data.message =="Success"){
+				console.log(response.data.message)
+				$location.url('/wishlist')
+			}else{
+				console.log(response.data.message)
+			}
+			
+	
+	})
 	}
 }])

@@ -49,7 +49,6 @@ def register():
     response = { "error": 'null', "data": {}, "message": "Success"}
     if request.method == 'POST':
         data = json.loads(request.data)
-<<<<<<< HEAD
         # user = User(data['email'], data['fname'], data['lname'], data['password'])
         # file = request.files['picture']
         # if file:
@@ -59,8 +58,6 @@ def register():
         #     name = filename
         # else:
         name = 'default.jpg'
-=======
->>>>>>> 2570f82b15d14c921c07061a81eb4b7e59ccf8d8
         password = hashlib.md5(data['password'].encode()).hexdigest()
         user = User(data['email'], data['name'], password, data['age'], data['gender'])
         db.session.add(user)

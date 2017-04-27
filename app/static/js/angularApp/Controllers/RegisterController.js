@@ -28,7 +28,11 @@ app.controller('RegisterController', ['$scope', '$http','$location', function($s
 			}
 		
 		$http.post('/api/users/register', data, config).then(function(response){
-			console.log(response.data)
+			if(response.data.message == "Success"){
+				$location.url('/')
+			}else{
+				console.log("error registering")
+			}
 		})
 
 

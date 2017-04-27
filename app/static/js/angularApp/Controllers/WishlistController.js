@@ -5,16 +5,26 @@ app.controller('WishlistController', ['$scope','$http','$location', function($sc
 
 	config = {
 
-			headers:{'Accept': "json"}
+			headers:{'Accept': "json",
+			"Authorization":"Basic " +localStorage.token
+
+		}
+
 
 		}
 
 	$http.get('/api/users/'+localStorage.userID+'/wishlist', config).then(function(response){
 		
-			$scope.wishlist = response.data.wishlist
-			$scope.url = response.data.wishlist[0].thumbnail
-			console.log($scope.wishlist)
-			console.log($scope.url)
+			if(response.data.message =="Success"){
+				console.log(response.data)
+				$scope.wishlist = response.data.data.items
+				// $scope.url = response.data.data.items[0].thumbnail_url
+				// console.log($scope.wishlist)
+				// console.log($scope.url)
+			}else{
+				console.log(response.data.message)
+			}
+			
 	
 	})
 

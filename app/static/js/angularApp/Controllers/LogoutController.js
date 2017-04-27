@@ -1,6 +1,9 @@
 app.controller('LogoutController', ['$location', function($location){
+
+	localStorage.removeItem("name")
 	localStorage.removeItem("userID")
-	localStorage.removeItem("user")
-	console.log("hereeee")
+	localStorage.removeItem("username")
+	localStorage.removeItem("token")
+
 	$location.url('/')
 }])
