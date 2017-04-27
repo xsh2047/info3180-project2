@@ -28,7 +28,7 @@ app.controller('NewItemController', ['$scope','$http','$location',function($scop
 		$scope.thumbnail = $scope.thumbList[v]
 		config = {
 
-			headers:{'Accept': "json",
+			headers:{'Content-Type': "json",
 			"Authorization":"Basic " +localStorage.token
 
 			}

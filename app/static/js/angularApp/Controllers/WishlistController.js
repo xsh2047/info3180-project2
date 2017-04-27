@@ -42,6 +42,10 @@ app.controller('WishlistController', ['$scope','$http','$location', function($sc
 		})
 	}
 
+	$scope.share = function(){
+		$location.url('/wishlist/share')
+	}
+
 
 
 

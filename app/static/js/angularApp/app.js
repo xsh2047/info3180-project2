@@ -27,6 +27,10 @@ app.config(['$routeProvider',function($routeProvider, $locationProvider){
 		controller: 'NewItemController',
 		templateUrl: '/static/js/angularApp/Views/new.html'
 	})
+	.when('/wishlist/share',{
+		controller:"ShareController",
+		templateUrl:'/static/js/angularApp/Views/share.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	})
