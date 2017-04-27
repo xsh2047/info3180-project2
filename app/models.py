@@ -4,7 +4,6 @@ import datetime
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    image = db.Column(db.String(80))
     email = db.Column(db.String(80), unique = True)
     gender = db.Column(db.String(10))
     age = db.Column(db.Integer)
@@ -27,13 +26,12 @@ class User(db.Model):
         except NameError:
             return str(self.id)  # python 3 support
 
-    def __init__(self, email=None, name=None, password=None, image=None, age=None, gender=None):
+    def __init__(self, email=None, name=None, password=None, age=None, gender=None):
         self.email = email
         self.name = name
         self.password = password
         self.age = age
         self.gender = gender
-        self.image = image
         self.wishlist = []
 
     def __repr__(self):
@@ -47,7 +45,6 @@ class User(db.Model):
            'name'               : self.name,
            'age'                : self.age,
            'gender'             : self.gender,
-           'image'              : self.image,
            'profile_created_on' : self.created
        }
        
