@@ -11,6 +11,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify, m
 from models import User, WishlistItem
 from forms import UserForm, WishlistForm
 from bs4 import BeautifulSoup
+from flask_mail import Mail, Message
 
 import urllib2,json
 from werkzeug.utils import secure_filename
@@ -135,6 +136,23 @@ def deleteitem(userid, itemid):
     response['error'] = 'true'
     response['message'] = 'Item not found'
     return jsonify(response)
+ 
+@app.route('/api/send/<int:userid>/<emails>')
+@authenticate
+def send_email(userid, emails):
+    user = User.query.get(userid)
+    recpts = emails.split(',')
+    count = 1
+    heading = user.name + "'s Wishlist"
+    body = heading + ": \n"
+    for item in user.wishlist:
+        body += str(count) + ". " + item.name + " - " + item.url + "\n"
+        count += 1
+    mail = Mail(app)
+    msg = Message(heading, sender = user.email, recipients = recpts)
+    msg.body = body
+    mail.send(msg)
+    return "Sent"
 
 ###
 # The functions below should be applicable to all Flask apps.

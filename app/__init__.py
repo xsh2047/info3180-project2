@@ -2,11 +2,15 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app = Flask(__name__)
 app.config['SECRET_KEY'] = "fdcf3m3o(H*DNEDAIODNke*@@#NJEDed3"
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://lab5:password@localhost/lab5"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://admin:admin@localhost/web_project"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # added just to suppress a warning
-UPLOAD_FOLDER = './app/static/uploads'
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'bob291070@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Something'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
 
 db = SQLAlchemy(app)
 
