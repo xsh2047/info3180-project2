@@ -1,12 +1,19 @@
 <a href="/#/logout">Logout</a>
-this is your wishlist bitch
 
-<div class="container">
+	<h1> Wishlist</h1>
+
+
 	<div ng-repeat="item in wishlist">
 		<div class="col-md-4">
-			<h4>{{item.name}}</h4>
-			<img class="thumbnail" ng-src ="{{item.thumbnail_url}}"></img>
+			<h3>{{item.title}}</h3>
+			{{item.description}}
+			<img class="thumbnail" height="200" ng-src ="{{item.thumbnail_url}}"></img>
+			<button class="btn-xs" ng-click="deleteItem($index)">Remove</button>
 		</div>
 	</div>
-	<button ng-click="addNew()">Add New Item</button>
-</div>
+
+	<div class="col-md-4">
+		<button class = "btn btn-default;align:center" ng-click="addNew()">+</button>
+	</div>
+
+

@@ -5,7 +5,7 @@ app.controller('NewItemController', ['$scope','$http','$location',function($scop
 
 	$scope.url = ""
 	$scope.thumbList=[]
-
+	$scope.showThumbs = false
 	
 	$scope.addItem = function(){
 		config ={
@@ -19,6 +19,7 @@ app.controller('NewItemController', ['$scope','$http','$location',function($scop
 
 		$http.get('/api/thumbnails?url='+$scope.url, config).then(function(response){
 			$scope.thumbList = response.data.data.thumbnails
+			$scope.showThumbs = true
 			console.log($scope.thumbList)
 		})
 	}

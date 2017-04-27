@@ -14,10 +14,13 @@
 		<label class ="control-label col-sm-2" for="url">Url:</label>
 		<input type="text" id="url" ng-model="url">
 	</div>
-	<button class="btn btn-default" ng-click="addItem()"> Add </button>
-	<div ng-repeat="thumb in thumbList track by $index">
-		<div class="col-sm-2">
-			<img class = "thumbnail"  src="{{thumb}}" ng-click="select($index)">
+	<button class="btn " ng-click="addItem()"> Add </button>
+	<div ng-show = "showThumbs" class="container">
+		<h1>Select Thumbnail</h1>
+		<div  ng-repeat="thumb in thumbList track by $index">
+			<div class="col-sm-2">
+				<img class = "thumbnail"  src="{{thumb}}" ng-click="select($index)">
+			</div>
 		</div>
 	</div>
 	

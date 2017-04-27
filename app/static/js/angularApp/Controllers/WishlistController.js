@@ -8,19 +8,14 @@ app.controller('WishlistController', ['$scope','$http','$location', function($sc
 			headers:{'Accept': "json",
 			"Authorization":"Basic " +localStorage.token
 
-		}
-
-
-		}
+			}
+	}
 
 	$http.get('/api/users/'+localStorage.userID+'/wishlist', config).then(function(response){
 		
 			if(response.data.message =="Success"){
-				console.log(response.data)
 				$scope.wishlist = response.data.data.items
-				// $scope.url = response.data.data.items[0].thumbnail_url
-				// console.log($scope.wishlist)
-				// console.log($scope.url)
+				console.log($scope.wishlist)
 			}else{
 				console.log(response.data.message)
 			}
@@ -31,6 +26,23 @@ app.controller('WishlistController', ['$scope','$http','$location', function($sc
 	$scope.addNew = function(){
 		$location.url('/wishlist/new')
 	}
+
+	$scope.deleteItem = function(x){
+		url = '/api/users/'+localStorage.userID+'/wishlist/'+$scope.wishlist[x].id
+		config = {
+
+			headers:{'Accept': "json",
+			"Authorization":"Basic " +localStorage.token
+
+			}
+		}
+		$http.delete(url, config).then(function(response){
+			console.log(response.data.message)
+			$location.url('/wishlist')
+		})
+	}
+
+
 
 
 }])
