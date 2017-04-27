@@ -54,6 +54,7 @@ class User(db.Model):
     @property
     def serialize_many(self):
        return {
+           'id'     : self.id,
            'name'  : self.name,
            'email' : self.email
        }
@@ -81,6 +82,6 @@ class WishlistItem(db.Model):
            'id'             : self.id,
            'title'          : self.name,
            'description'    : self.description,
-           'thumbnail_url'      : self.thumbnail,
+           'thumbnail_url'  : self.thumbnail,
            'url'            : self.url
        }
