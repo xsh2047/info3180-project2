@@ -10,12 +10,14 @@ app.controller('RegisterController', ['$scope', '$http','$location', function($s
 
 	$scope.register = function(){
 
+		console.log($scope.profPic)
 		data = {
 
 			'email':$scope.email,
-			'fname':$scope.fname,
-			'lname':$scope.lname,
-			'password':$scope.password
+			'name':$scope.name,
+			'password':$scope.password,
+			'age':$scope.age,
+			'gender':$scope.gender
 
 		}
 

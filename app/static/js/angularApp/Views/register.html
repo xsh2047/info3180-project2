@@ -1,13 +1,29 @@
 Register
 
-<form>
-	Email:
-	<input type="text" name="Email" ng-model="email">
-	First Name:
-	<input type="text" name="FirstName" ng-model="fname">
-	Last Name:
-	<input type="text" name="LastName" ng-model="lname">
-	Password:
-	<input type="password" name="Password" ng-model="password">
-	<button ng-click="register()">Register</button>
+<form class="form-horizontal">
+	<div class="form-group">
+		<label class ="control-label col-sm-2" for="email">Email:</label>
+		<input type="text" id="email" ng-model="email">
+	</div>
+	<div class="form-group">
+		<label class ="control-label col-sm-2" for ='name'>Name:</label>
+		<input type="text" id="name" ng-model="name">
+	</div>
+	<div class="form-group">
+		<label class ="control-label col-sm-2" for="age">Age:</label>
+		<input type="text" id="age" ng-model="age">
+	</div>
+	<div class="form-group">
+		<label class ="control-label col-sm-2" for="gender">Gender:</label>
+		<input type="text" id="gender" ng-model="gender">
+	</div>
+	<div class="form-group">
+		<label class ="control-label col-sm-2" for="password">Password:</label>
+		<input type="password" id="password" ng-model="password">
+	</div>
+
+	
+	<button class="btn btn-default" ng-click="register()">Register</button>
+	
 </form>
+

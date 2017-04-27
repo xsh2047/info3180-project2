@@ -50,16 +50,15 @@ def register():
     if request.method == 'POST':
         
         data = json.loads(request.data)
-        user = User(data['email'], data['fname'], data['lname'], data['password'])
-        file = request.files['picture']
-        if file:
-            file_folder = app.config['UPLOAD_FOLDER']
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(file_folder, filename))
-            name = filename
-        else:
-            name = 'default.jpg'
-        data = request.form
+        # user = User(data['email'], data['fname'], data['lname'], data['password'])
+        # file = request.files['picture']
+        # if file:
+        #     file_folder = app.config['UPLOAD_FOLDER']
+        #     filename = secure_filename(file.filename)
+        #     file.save(os.path.join(file_folder, filename))
+        #     name = filename
+        # else:
+        name = 'default.jpg'
         password = hashlib.md5(data['password'].encode()).hexdigest()
         user = User(data['email'], data['name'], password, name, data['age'], data['gender'])
         db.session.add(user)
